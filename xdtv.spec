@@ -1,11 +1,12 @@
 Name:		xawdecode
 Summary:	Video4Linux Stream Capture Viewer
-Version:	1.6.6a
-Release:	0.1
+Version:	1.6.7
+Release:	0.20030131.0
 License:	GPL
 URL:		http://xawdecode.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/xawdecode/%{name}-%{version}.tar.gz
+Source0:	http://prdownloads.sourceforge.net/xawdecode/%{name}-2003-01-31.tar.gz
 Patch0:		%{name}-DESTDIR.patch
+Patch1:		%{name}-opt.patch
 Group:		X11/Applications/Multimedia
 Requires:	XFree86-libs
 #Requires:	divx4linux
@@ -37,14 +38,17 @@ Developpement files for xawdecode.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
-%setup -q
+%setup -q -n %{name}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__aclocal}
-%{__autoconf}
+%{__autoheader}
 %{__automake}
-%configure --disable-divx4linux --disable-alsa
+%{__autoconf}
+CFLAGS="%{rpmcflags} -I/usr/include/divx" ; export CFLAGS
+%configure --disable-alsa
 %{__make}
 
 %install

@@ -1,9 +1,9 @@
 diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 --- xawdecode-1.6.6a/Makefile.am	Mon Nov 11 23:38:54 2002
 +++ xawdecode-1.6.6a.DESTDIR/Makefile.am	Thu Jan 30 00:58:10 2003
-@@ -39,28 +39,28 @@
+@@ -39,29 +39,29 @@
  	     debian/compat \
- 	     debian/xawdecode.postrm 
+ 	     debian/xawdecode.docs
  install-data-local:
 -	$(mkinstalldirs)  $(ROOT)@app_defaults@/
 -	$(INSTALL_DATA) Xawdecode.ad $(ROOT)/@app_defaults@/Xawdecode
@@ -20,6 +20,7 @@ diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 -	$(INSTALL_DATA) src/strtab.h $(prefix)/include/xawdecode/
 -	$(INSTALL_DATA) src/toolbox.h $(prefix)/include/xawdecode/
 -	$(INSTALL_DATA) src/videodev.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/videodev2.h $(prefix)/include/xawdecode/
 -	$(INSTALL_DATA) src/x11.h $(prefix)/include/xawdecode/
 -	$(INSTALL_DATA) src/xawdecode.h $(prefix)/include/xawdecode/
 -	$(mkinstalldirs) $(prefix)/share/xawdecode/icons/
@@ -27,8 +28,9 @@ diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 -	$(INSTALL_DATA) xawdecode-32.png $(prefix)/share/xawdecode/icons/
 -	$(INSTALL_DATA) xawdecode-48.png $(prefix)/share/xawdecode/icons/
 -	$(INSTALL_DATA) src/xawdecode.xpm $(prefix)/share/xawdecode/icons/
--	$(INSTALL_DATA) scan.sh $(prefix)/bin/
 -	$(INSTALL_DATA) xawdecode_wizard.conf $(ROOT)/etc/
+-	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(prefix)/bin/
+-	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(prefix)/bin/
 +	$(mkinstalldirs)  $(DESTDIR)/$(app_defaults)/
 +	$(INSTALL_DATA) Xawdecode.ad $(DESTDIR)/$(app_defaults)/Xawdecode
 +	$(mkinstalldirs) $(DESTDIR)/$(includedir)/xawdecode/
@@ -44,6 +46,7 @@ diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 +	$(INSTALL_DATA) src/strtab.h $(DESTDIR)/$(includedir)/xawdecode/
 +	$(INSTALL_DATA) src/toolbox.h $(DESTDIR)/$(includedir)/xawdecode/
 +	$(INSTALL_DATA) src/videodev.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/videodev2.h $(DESTDIR)/$(includedir)/xawdecode/
 +	$(INSTALL_DATA) src/x11.h $(DESTDIR)/$(includedir)/xawdecode/
 +	$(INSTALL_DATA) src/xawdecode.h $(DESTDIR)/$(includedir)/xawdecode/
 +	$(mkinstalldirs) $(DESTDIR)/$(datadir)/xawdecode/icons/
@@ -51,9 +54,9 @@ diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 +	$(INSTALL_DATA) xawdecode-32.png $(DESTDIR)/$(datadir)/xawdecode/icons/
 +	$(INSTALL_DATA) xawdecode-48.png $(DESTDIR)/$(datadir)/xawdecode/icons/
 +	$(INSTALL_DATA) src/xawdecode.xpm $(DESTDIR)/$(datadir)/xawdecode/icons/
-+	$(INSTALL_DATA) scan.sh $(DESTDIR)/$(prefix)/bin/
 +	$(INSTALL_DATA) xawdecode_wizard.conf $(DESTDIR)/etc/
- 	
++	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(DESTDIR)$(prefix)/bin/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(DESTDIR)$(prefix)/bin/
 diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefile.in
 --- xawdecode-1.6.6a/font/Makefile.in	Mon Oct 28 20:18:25 2002
 +++ xawdecode-1.6.6a.DESTDIR/font/Makefile.in	Thu Jan 30 01:00:42 2003
@@ -87,10 +90,13 @@ diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefil
 diff -ur xawdecode-1.6.6a/src/Makefile.am xawdecode-1.6.6a.DESTDIR/src/Makefile.am
 --- xawdecode-1.6.6a/src/Makefile.am	Sun Nov 10 16:29:39 2002
 +++ xawdecode-1.6.6a.DESTDIR/src/Makefile.am	Thu Jan 30 01:01:15 2003
-@@ -69,6 +69,3 @@
+@@ -69,9 +69,6 @@
  
  xawdecode_wizard_SOURCES = xawdecode_wizard.c
  xawdecode_wizard_LDADD = @X_LIBS@ @LIBXAW@ @LIBXMU@ @LIBXT@ @LIBXEXT@ -lX11
 -
 -install-exec-local:
--	chmod u+s $(prefix)/bin/v4l-conf
+-	chmod u+s $(prefix)/bin/xawdecode_v4l-conf
+ 
+ xawdecode_scantv_LDADD = @LIBZVBI@ -lpthread
+ 

@@ -58,8 +58,8 @@ diff -ur xawdecode/src/Makefile.am xawdecode.opt/src/Makefile.am
  PERF_FLAGS=-O4 @_march@ @_mcpu@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
 +PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
  
--AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
-+AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(CFLAGS) $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
+-AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
++AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(CFLAGS) $(PERF_FLAGS3) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
  
  INCLUDES = -I../alevt
  

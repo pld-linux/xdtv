@@ -1,0 +1,11 @@
+diff -ur xawdecode/configure.in xawdecode.configure/configure.in
+--- xawdecode/configure.in	Sat Feb 22 03:42:18 2003
++++ xawdecode.configure/configure.in	Sat Feb 22 03:44:22 2003
+@@ -438,6 +438,7 @@
+ dnl ---------------------------------------------------------------------
+ dnl Checks for XviD headers
+ 
++    CFLAGS="$CFLAGS -I/usr/include/xvid"
+     AC_MSG_CHECKING(for XviD header files)
+     AC_TRY_COMPILE([
+     #include <xvid.h>

@@ -55,6 +55,7 @@ Pliki do programowania z u¿yciem xawdecode.
 %patch2 -p1
 
 %build
+LDFLAGS="%{rpmldflags} -lm"; export LDFLAGS
 %{__aclocal}
 %{__autoheader}
 %{__automake}

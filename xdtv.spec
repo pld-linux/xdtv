@@ -24,13 +24,6 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
 %{!?_without_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	xvid-devel
-Requires:	XFree86-libs
-Requires:	Xaw3d
-#Requires:	divx4linux
-Requires:	ffmpeg
-Requires:	lame-libs
-Requires:	libjpeg
-Requires:	lirc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		addir	/usr/X11R6/lib/X11/app-defaults

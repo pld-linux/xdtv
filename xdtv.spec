@@ -1,3 +1,7 @@
+#
+# Conditional build:
+# --without lirc
+#
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
@@ -18,7 +22,7 @@ BuildRequires:	automake
 BuildRequires:	ffmpeg-devel
 BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	lirc-devel
+%{!?_without_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	xvid-devel
 Requires:	XFree86-libs
 Requires:	Xaw3d
@@ -61,7 +65,11 @@ Pliki do programowania z u¿yciem xawdecode.
 %{__autoheader}
 %{__automake}
 %{__autoconf}
-%configure --disable-divx4linux --disable-alsa
+%configure \
+	%{?_without_lirc:--disable-lirc} \
+	%{!?_without_lirc:--enable-lirc} \
+	--disable-divx4linux \
+	--disable-alsa
 %{__make}
 
 %install

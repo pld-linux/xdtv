@@ -27,7 +27,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	xvid-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		addir	/usr/X11R6/lib/X11/app-defaults
+%define		_appdefsdir	/usr/X11R6/lib/X11/app-defaults
 
 %description
 X11 TV application based on xawtv 2.x series with plugin capabilities.
@@ -98,7 +98,7 @@ umask 022
 %attr(4755,root,root) %{_bindir}/xawdecode_v4l-conf
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/icons
-%{addir}/*
+%{_appdefsdir}/*
 %{_mandir}/man1/*
 %{_fontsdir}/misc/*.pcf
 

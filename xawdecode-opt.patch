@@ -73,25 +73,3 @@ diff -ur xawdecode/src/Makefile.am xawdecode.opt/src/Makefile.am
  
  avilib.o: avilib.c avilib.h ../config.h
  	$(CC) $(CFLAGS) -D_LARGEFILE64_SOURCE -I. -I.. $(INCLUDES) -c $< -o $@
-diff -ur xawdecode/src/Makefile.am~ xawdecode.opt/src/Makefile.am~
---- xawdecode/src/Makefile.am~	Tue Feb 18 16:14:33 2003
-+++ xawdecode.opt/src/Makefile.am~	Sat Feb 22 03:31:36 2003
-@@ -54,9 +54,10 @@
- DISTCLEANFILES=*~ *.log
- PERF_FLAGS1=-ffast-math -fomit-frame-pointer
- PERF_FLAGS2=-mcpu=i686 -O3 -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -DCPU=686 -ffast-math
-+PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
-  
- #AM_CFLAGS = -Wall -D_REENTRANT $(PERF_FLAGS1) @CFLAGS@ @X_CFLAGS@ -DPREFIX='"$(prefix)"'
--AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS2) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
-+AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
- INCLUDES = -I../alevt
- 
- #xawdecode_LDADD = @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBDL@
-@@ -73,6 +74,3 @@
- 
- v4l_conf_SOURCES = v4l-conf.c videodev.h
- v4l_conf_LDADD = @X_LIBS@ -lX11 @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@
--
--install-exec-local:
--	chmod u+s $(prefix)/bin/v4l-conf

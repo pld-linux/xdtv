@@ -53,7 +53,7 @@
  
  DISTCLEANFILES=*~ *.log
  
--PERF_FLAGS=-O4 @_march@ @_mcpu@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
+-PERF_FLAGS=-O4 @_march@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
 +PERF_FLAGS=-fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
  
  AM_CFLAGS = @CFLAGPTHREAD@ @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE

@@ -5,12 +5,12 @@
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
-Version:	1.9.2
+Version:	2.0.1
 Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.bz2
-# Source0-md5:	0d17f30e6600684aa297d22311789e87
+Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.bz2
+# Source0-md5:	8dcb3a814c8db47009ddbe03787eeb1c
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch
@@ -53,7 +53,7 @@ Development files for xawdecode.
 Pliki do programowania z u¿yciem xawdecode.
 
 %prep
-%setup -q
+%setup -q -n xdtv-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -95,19 +95,19 @@ fontpostinst misc
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog FAQfr-xawdecode libavc-rate-control.txt
+%doc AUTHORS ChangeLog FAQfr-xdtv libavc-rate-control.txt
 %doc lircrc.hauppauge.sample lircrc.miro.sample lisez-moi README*
-%doc xawdecoderc.sample
-%config(noreplace) %verify(not md5 size mtime) /etc/xawdecode*
-%attr(755,root,root) %{_bindir}/xawdecode
-%attr(755,root,root) %{_bindir}/xawdecode_[a-uw]*
-%attr(4755,root,root) %{_bindir}/xawdecode_v4l-conf
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/icons
+%doc xdtvrc.sample
+%config(noreplace) %verify(not md5 size mtime) /etc/xdtv*
+%attr(755,root,root) %{_bindir}/xdtv
+%attr(755,root,root) %{_bindir}/xdtv_[a-uw]*
+%attr(4755,root,root) %{_bindir}/xdtv_v4l-conf
+%dir %{_datadir}/xdtv
+%{_datadir}/xdtv/icons
 %{_appdefsdir}/*
 %{_mandir}/man1/*
 %{_fontsdir}/misc/*.pcf
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/xawdecode
+%{_includedir}/xdtv

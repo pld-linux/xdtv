@@ -5,12 +5,12 @@
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
-Version:	1.6.8
+Version:	1.7.0
 Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
 Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.gz
-# Source0-md5:	c386504d4060fcfd7b0291e287be21f1
+# Source0-md5:	bf6c3902de3d18974ec40b26fbf806b9
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch

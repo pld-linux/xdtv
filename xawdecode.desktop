@@ -1,0 +1,18 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=XdTV
+Comment=TV viewer
+Comment[da]=TV viser
+Comment[de]=TV Betrachter
+Comment[es]=Pantalla de TV
+Comment[fr]=Visualiseur de TV
+Comment[it]=Visualizzatore TV
+Comment[nl]=TV tuner
+Comment[pl]=Program obsługujący tuner TV
+Comment[sv]=TV-visare
+Exec=xdtv
+Icon=/usr/share/xdtv/icons/xdtv-48.png
+Type=Application
+Categories=Multimedia;AudioVideo;Video;TV;
+Terminal=false
+# vi: encoding=utf-8

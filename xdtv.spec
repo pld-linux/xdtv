@@ -10,7 +10,7 @@ Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
 Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.gz
-# Source0-md5:	bf6c3902de3d18974ec40b26fbf806b9
+# Source0-md5:	baaf8223ed19ff43088c35ca6e3a989a
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch

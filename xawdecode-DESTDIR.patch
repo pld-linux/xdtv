@@ -1,0 +1,91 @@
+diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
+--- xawdecode-1.6.6a/Makefile.am	Mon Nov 11 23:38:54 2002
++++ xawdecode-1.6.6a.DESTDIR/Makefile.am	Thu Jan 30 00:58:10 2003
+@@ -39,25 +39,25 @@
+ 	     debian/xawdecode.postrm 
+ 
+ install-data-local:
+-	$(mkinstalldirs)  $(ROOT)@app_defaults@/
+-	$(INSTALL_DATA) Xawdecode.ad $(ROOT)/@app_defaults@/Xawdecode
+-	$(mkinstalldirs) $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/bttv.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/channel.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/colorspace.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/divx.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/file.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/grab.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/memcpy.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/mixer.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/plugin.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/strtab.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/toolbox.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/videodev.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/x11.h $(prefix)/include/xawdecode/
+-	$(INSTALL_DATA) src/xawdecode.h $(prefix)/include/xawdecode/
+-	$(mkinstalldirs) $(prefix)/share/xawdecode/icons/
+-	$(INSTALL_DATA) xawdecode-16.png $(prefix)/share/xawdecode/icons/
+-	$(INSTALL_DATA) xawdecode-32.png $(prefix)/share/xawdecode/icons/
+-	$(INSTALL_DATA) xawdecode-48.png $(prefix)/share/xawdecode/icons/
+-	$(INSTALL_DATA) src/xawdecode.xpm $(prefix)/share/xawdecode/icons/
++	$(mkinstalldirs)  $(DESTDIR)/$(app_defaults)/
++	$(INSTALL_DATA) Xawdecode.ad $(DESTDIR)/$(app_defaults)/Xawdecode
++	$(mkinstalldirs) $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/bttv.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/channel.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/colorspace.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/divx.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/file.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/grab.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/memcpy.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/mixer.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/plugin.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/strtab.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/toolbox.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/videodev.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/x11.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/xawdecode.h $(DESTDIR)/$(includedir)/xawdecode/
++	$(mkinstalldirs) $(DESTDIR)/$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-16.png $(DESTDIR)/$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-32.png $(DESTDIR)/$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-48.png $(DESTDIR)/$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) src/xawdecode.xpm $(DESTDIR)/$(datadir)/xawdecode/icons/
+diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefile.in
+--- xawdecode-1.6.6a/font/Makefile.in	Mon Oct 28 20:18:25 2002
++++ xawdecode-1.6.6a.DESTDIR/font/Makefile.in	Thu Jan 30 01:00:42 2003
+@@ -1,7 +1,6 @@
+-ROOT=
+ prefix=/usr/X11R6
+ #FONTDIR=$(ROOT)$(prefix)/lib/X11/fonts/misc
+-FONTDIR=$(ROOT)/@x_libraries@/X11/fonts/misc
++FONTDIR=/usr/share/fonts/misc
+ BDF=$(shell echo *.bdf)
+ PCF=$(subst .bdf,.pcf,$(BDF))
+ 
+@@ -9,15 +8,10 @@
+ 	mkfontdir
+ 
+ install: all
+-	mkdir -p $(R)$(FONTDIR)
++	mkdir -p $(DESTDIR)$(FONTDIR)
+ 	for file in $(PCF); do \
+-		install -m 644 $$file $(R)$(FONTDIR); \
++		install -m 644 $$file $(DESTDIR)$(FONTDIR); \
+ 	done
+-	if test "$(ROOT)" = ""; then		\
+-		(cd $(FONTDIR); mkfontdir);	\
+-		xset fp rehash;			\
+-		true;				\
+-	fi
+ 
+ uninstall:
+ #	for file in $(PCF); do \
+diff -ur xawdecode-1.6.6a/src/Makefile.am xawdecode-1.6.6a.DESTDIR/src/Makefile.am
+--- xawdecode-1.6.6a/src/Makefile.am	Sun Nov 10 16:29:39 2002
++++ xawdecode-1.6.6a.DESTDIR/src/Makefile.am	Thu Jan 30 01:01:15 2003
+@@ -69,6 +69,3 @@
+ 
+ v4l_conf_SOURCES = v4l-conf.c videodev.h
+ v4l_conf_LDADD = @X_LIBS@ -lX11 @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@
+-
+-install-exec-local:
+-	chmod u+s $(prefix)/bin/v4l-conf

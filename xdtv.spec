@@ -23,6 +23,7 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	Xaw3d-devel
 BuildRequires:	lirc-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	xvid-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 

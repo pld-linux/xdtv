@@ -31,6 +31,7 @@ diff -ur xawdecode-1.8.1/src/Makefile.am xawdecode-1.8.1.DESTDIR/src/Makefile.am
 -	$(INSTALL_DATA) xawdecode_wizard.conf $(ROOT)/etc/
 -	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(prefix)/bin/
 -	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(prefix)/bin/
+-	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(prefix)/bin/
 +	$(mkinstalldirs)  $(DESTDIR)/$(app_defaults)/
 +	$(INSTALL_DATA) Xawdecode.ad $(DESTDIR)/$(app_defaults)/Xawdecode
 +	$(mkinstalldirs) $(DESTDIR)/$(includedir)/xawdecode/
@@ -57,7 +58,7 @@ diff -ur xawdecode-1.8.1/src/Makefile.am xawdecode-1.8.1.DESTDIR/src/Makefile.am
 +	$(INSTALL_DATA) xawdecode_wizard.conf $(DESTDIR)/etc/
 +	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(DESTDIR)$(prefix)/bin/
 +	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(DESTDIR)$(prefix)/bin/
- 	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(prefix)/bin/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(DESTDIR)$(prefix)/bin/
 diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefile.in
 --- xawdecode-1.6.6a/font/Makefile.in	Mon Oct 28 20:18:25 2002
 +++ xawdecode-1.6.6a.DESTDIR/font/Makefile.in	Thu Jan 30 01:00:42 2003

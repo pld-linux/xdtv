@@ -78,14 +78,14 @@ install -d $RPM_BUILD_ROOT/etc
 rm -rf $RPM_BUILD_ROOT
 
 %post
-cd %{_fontsdir}/misc                                                            
-umask 022                                                                       
-/usr/X11R6/bin/mkfontdir                                                            
+cd %{_fontsdir}/misc
+umask 022
+/usr/X11R6/bin/mkfontdir
 
 %postun
-cd %{_fontsdir}/misc                                                            
-umask 022                                                                       
-/usr/X11R6/bin/mkfontdir                                                            
+cd %{_fontsdir}/misc
+umask 022
+/usr/X11R6/bin/mkfontdir
 
 %files
 %defattr(644,root,root,755)

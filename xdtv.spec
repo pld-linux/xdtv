@@ -55,6 +55,7 @@ Pliki do programowania z u¿yciem xawdecode.
 %patch2 -p1
 
 %build
+cp -f /usr/share/automake/config.sub .
 LDFLAGS="%{rpmldflags} -lm"; export LDFLAGS
 %{__aclocal}
 %{__autoheader}

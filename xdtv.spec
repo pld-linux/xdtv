@@ -68,6 +68,8 @@ Pliki do programowania z u¿yciem xawdecode.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc
+
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	FONTDIR=%{_fontsdir}/misc
@@ -90,7 +92,9 @@ umask 022
 %doc AUTHORS ChangeLog FAQfr-xawdecode libavc-rate-control.txt
 %doc lircrc.hauppauge.sample lircrc.miro.sample lisez-moi README*
 %doc xawdecoderc.sample
-%attr(755,root,root) %{_bindir}/xawdecode
+%attr(644,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/xawdecode*
+%attr(755,root,root) %{_bindir}/scan.sh
+%attr(755,root,root) %{_bindir}/xawdecode*
 %attr(4755,root,root) %{_bindir}/v4l-conf
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/icons

@@ -1,0 +1,97 @@
+diff -ur xawdecode/alevt/Makefile.am xawdecode.opt/alevt/Makefile.am
+--- xawdecode/alevt/Makefile.am	Sun Nov 24 23:38:24 2002
++++ xawdecode.opt/alevt/Makefile.am	Sat Feb 22 03:33:59 2003
+@@ -84,7 +84,7 @@
+ # AM_CFLAGS=$(OPT) -DVERSION=\"$(VER)\" $(DEFS) -I/usr/X11R6/include -I/usr/local/include -W
+ 
+ #AM_CFLAGS = -DVERSION=\"$(VER)\"  @CFLAGS@  @X_CFLAGS@
+-AM_CFLAGS = $(OPT)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
++AM_CFLAGS = $(CFLAGS)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
+ #INCLUDES = -I/usr/local/include
+ 
+ libalevt_a_DEPENDENCIES = bdf2xbm font1.xbm font2.xbm fontsize.h
+diff -ur xawdecode/configure.in xawdecode.opt/configure.in
+--- xawdecode/configure.in	Tue Feb 18 16:14:20 2003
++++ xawdecode.opt/configure.in	Sat Feb 22 03:38:42 2003
+@@ -449,8 +449,6 @@
+     AC_MSG_RESULT($xvid_header_ok)
+     if test x"$xvid_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find XviD header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ dnl ---------------------------------------------------------------------
+@@ -513,8 +511,6 @@
+     AC_MSG_RESULT($libavcodec_header_ok)
+     if test x"$libavcodec_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find libavcodec (ffmpeg) header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ dnl ---------------------------------------------------------------------
+@@ -551,8 +547,6 @@
+     AC_MSG_RESULT($divx_header_ok)
+     if test x"$divx_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find divx4linux header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ dnl ---------------------------------------------------------------------
+@@ -636,8 +630,6 @@
+         if test x"$lame_header_ok" = xno; then
+             AC_MSG_WARN(*** Could not find lame header files ***)
+             enable_lame=no
+-        else
+-            CFLAGS="$saved_CFLAGS"
+         fi
+     fi
+ 
+diff -ur xawdecode/src/Makefile.am xawdecode.opt/src/Makefile.am
+--- xawdecode/src/Makefile.am	Sat Feb 22 03:37:59 2003
++++ xawdecode.opt/src/Makefile.am	Sat Feb 22 03:33:30 2003
+@@ -54,9 +54,10 @@
+ DISTCLEANFILES=*~ *.log
+ PERF_FLAGS1=-ffast-math -fomit-frame-pointer
+ PERF_FLAGS2=-mcpu=i686 -O3 -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -DCPU=686 -ffast-math
++PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
+  
+ #AM_CFLAGS = -Wall -D_REENTRANT $(PERF_FLAGS1) @CFLAGS@ @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+-AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS2) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
++AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(CFLAGS) $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+ INCLUDES = -I../alevt
+ 
+ #xawdecode_LDADD = @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBDL@
+@@ -66,7 +67,7 @@
+ 
+ # more agressive optimization options lead to a non working write_jpeg function
+ writefile.o: writefile.c writefile.h ../config.h
+-	$(CC) -Wall -D_REENTRANT $(PERF_FLAGS1) @X_CFLAGS@ -DPREFIX='"$(prefix)"' -I. -I.. $(INCLUDES) -c $< -o $@
++	$(CC) $(CFLAGS) -Wall -D_REENTRANT $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"' -I. -I.. $(INCLUDES) -c $< -o $@
+ 
+ avilib.o: avilib.c avilib.h ../config.h
+ 	$(CC) $(CFLAGS) -D_LARGEFILE64_SOURCE -I. -I.. $(INCLUDES) -c $< -o $@
+diff -ur xawdecode/src/Makefile.am~ xawdecode.opt/src/Makefile.am~
+--- xawdecode/src/Makefile.am~	Tue Feb 18 16:14:33 2003
++++ xawdecode.opt/src/Makefile.am~	Sat Feb 22 03:31:36 2003
+@@ -54,9 +54,10 @@
+ DISTCLEANFILES=*~ *.log
+ PERF_FLAGS1=-ffast-math -fomit-frame-pointer
+ PERF_FLAGS2=-mcpu=i686 -O3 -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -DCPU=686 -ffast-math
++PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
+  
+ #AM_CFLAGS = -Wall -D_REENTRANT $(PERF_FLAGS1) @CFLAGS@ @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+-AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS2) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
++AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+ INCLUDES = -I../alevt
+ 
+ #xawdecode_LDADD = @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBDL@
+@@ -73,6 +74,3 @@
+ 
+ v4l_conf_SOURCES = v4l-conf.c videodev.h
+ v4l_conf_LDADD = @X_LIBS@ -lX11 @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@
+-
+-install-exec-local:
+-	chmod u+s $(prefix)/bin/v4l-conf

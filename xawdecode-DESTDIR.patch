@@ -1,8 +1,7 @@
-diff -ur xawdecode-1.8.1/src/Makefile.am xawdecode-1.8.1.DESTDIR/src/Makefile.am
---- xawdecode-1.8.1/Makefile.am.orig	2003-09-26 00:23:12.000000000 +0200
-+++ xawdecode-1.8.1/Makefile.am	2003-10-05 00:43:30.000000000 +0200
-@@ -43,30 +43,30 @@
- 	     debian/xawdecode_wizard.menu
+--- xawdecode-1.9.2/Makefile.am.orig	2004-06-11 00:09:25.000000000 +0200
++++ xawdecode-1.9.2/Makefile.am	2004-08-22 13:32:29.314416806 +0200
+@@ -52,32 +52,32 @@
+ 		debian/xawdecode_wizard.menu
  
  install-data-local:
 -	$(mkinstalldirs)  $(ROOT)@app_defaults@/
@@ -32,36 +31,39 @@ diff -ur xawdecode-1.8.1/src/Makefile.am xawdecode-1.8.1.DESTDIR/src/Makefile.am
 -	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(prefix)/bin/
 -	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(prefix)/bin/
 -	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(prefix)/bin/
-+	$(mkinstalldirs)  $(DESTDIR)/$(app_defaults)/
-+	$(INSTALL_DATA) Xawdecode.ad $(DESTDIR)/$(app_defaults)/Xawdecode
-+	$(mkinstalldirs) $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/bttv.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/channel.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/colorspace.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/divx.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/file.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/grab.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/memcpy.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/mixer.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/plugin.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/strtab.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/toolbox.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/videodev.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/videodev2.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/x11.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(INSTALL_DATA) src/xawdecode.h $(DESTDIR)/$(includedir)/xawdecode/
-+	$(mkinstalldirs) $(DESTDIR)/$(datadir)/xawdecode/icons/
-+	$(INSTALL_DATA) xawdecode-16.png $(DESTDIR)/$(datadir)/xawdecode/icons/
-+	$(INSTALL_DATA) xawdecode-32.png $(DESTDIR)/$(datadir)/xawdecode/icons/
-+	$(INSTALL_DATA) xawdecode-48.png $(DESTDIR)/$(datadir)/xawdecode/icons/
-+	$(INSTALL_DATA) src/xawdecode.xpm $(DESTDIR)/$(datadir)/xawdecode/icons/
+-	$(INSTALL_SCRIPT) -m 755 xawdecode_http.sh $(prefix)/bin/
+-	$(INSTALL_SCRIPT) -m 755 xawdecode_makedvd.sh $(prefix)/bin/
++	$(mkinstalldirs) $(DESTDIR)@app_defaults@/
++	$(INSTALL_DATA) Xawdecode.ad $(DESTDIR)/@app_defaults@/Xawdecode
++	$(mkinstalldirs) $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/bttv.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/channel.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/colorspace.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/divx.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/file.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/grab.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/memcpy.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/mixer.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/plugin.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/strtab.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/toolbox.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/videodev.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/videodev2.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/x11.h $(DESTDIR)$(includedir)/xawdecode/
++	$(INSTALL_DATA) src/xawdecode.h $(DESTDIR)$(includedir)/xawdecode/
++	$(mkinstalldirs) $(DESTDIR)$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-16.png $(DESTDIR)$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-32.png $(DESTDIR)$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) xawdecode-48.png $(DESTDIR)$(datadir)/xawdecode/icons/
++	$(INSTALL_DATA) src/xawdecode.xpm $(DESTDIR)$(datadir)/xawdecode/icons/
 +	$(INSTALL_DATA) xawdecode_wizard.conf $(DESTDIR)/etc/
-+	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(DESTDIR)$(prefix)/bin/
-+	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(DESTDIR)$(prefix)/bin/
-+	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(DESTDIR)$(prefix)/bin/
-diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefile.in
---- xawdecode-1.6.6a/font/Makefile.in	Mon Oct 28 20:18:25 2002
-+++ xawdecode-1.6.6a.DESTDIR/font/Makefile.in	Thu Jan 30 01:00:42 2003
++	$(INSTALL_SCRIPT) -m 755 xawdecode_scan.sh $(DESTDIR)$(bindir)/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_subtitles.sh $(DESTDIR)$(bindir)/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_record.sh $(DESTDIR)$(bindir)/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_http.sh $(DESTDIR)$(bindir)/
++	$(INSTALL_SCRIPT) -m 755 xawdecode_makedvd.sh $(DESTDIR)$(bindir)/
+--- xawdecode-1.9.2/font/Makefile.in.orig	2003-12-08 21:11:20.000000000 +0100
++++ xawdecode-1.9.2/font/Makefile.in	2004-08-22 13:33:43.025306560 +0200
 @@ -1,7 +1,6 @@
 -ROOT=
  prefix=/usr/X11R6
@@ -72,7 +74,7 @@ diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefil
  PCF=$(subst .bdf,.pcf,$(BDF))
  
 @@ -9,15 +8,10 @@
- 	mkfontdir
+ 	$(MKFONTDIR)
  
  install: all
 -	mkdir -p $(R)$(FONTDIR)
@@ -82,23 +84,22 @@ diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefil
 +		install -m 644 $$file $(DESTDIR)$(FONTDIR); \
  	done
 -	if test "$(ROOT)" = ""; then		\
--		(cd $(FONTDIR); mkfontdir);	\
+-		(cd $(FONTDIR); $(MKFONTDIR));	\
 -		xset fp rehash;			\
 -		true;				\
 -	fi
  
  uninstall:
  #	for file in $(PCF); do \
-diff -ur xawdecode-1.6.6a/src/Makefile.am xawdecode-1.6.6a.DESTDIR/src/Makefile.am
---- xawdecode-1.6.6a/src/Makefile.am	Sun Nov 10 16:29:39 2002
-+++ xawdecode-1.6.6a.DESTDIR/src/Makefile.am	Thu Jan 30 01:01:15 2003
-@@ -69,9 +69,6 @@
- 
+--- xawdecode-1.9.2/src/Makefile.am.orig	2004-06-18 20:12:33.000000000 +0200
++++ xawdecode-1.9.2/src/Makefile.am	2004-08-22 13:34:00.074118781 +0200
+@@ -97,9 +97,6 @@
  xawdecode_wizard_SOURCES = xawdecode_wizard.c
- xawdecode_wizard_LDADD = @X_LIBS@ @LIBXAW@ @LIBXMU@ @LIBXT@ @LIBXEXT@ -lX11
--
+ xawdecode_wizard_LDADD = @X_LIBS@ @LIBXAW@ @LIBXMU@ @LIBXT@ @LIBXPM@ @LIBXEXT@ -lX11
+ 
 -install-exec-local:
 -	chmod u+s $(prefix)/bin/xawdecode_v4l-conf
+-
+ xawdecode_scantv_LDADD = @LIBZVBI@ @LIBPTHREAD@
  
- xawdecode_scantv_LDADD = @LIBZVBI@ -lpthread
- 
+ xawdecode_scantv_SOURCES = xawdecode_scantv.c grab-v4l.c grab-v4l2.c strtab.c colorspace.c frequencies.c

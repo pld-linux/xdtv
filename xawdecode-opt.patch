@@ -1,19 +1,17 @@
-diff -ur xawdecode/alevt/Makefile.am xawdecode.opt/alevt/Makefile.am
---- xawdecode/alevt/Makefile.am	Sun Nov 24 23:38:24 2002
-+++ xawdecode.opt/alevt/Makefile.am	Sat Feb 22 03:33:59 2003
-@@ -84,7 +84,7 @@
+--- xawdecode-1.9.2/alevt/Makefile.am.orig	2004-03-31 00:05:15.000000000 +0200
++++ xawdecode-1.9.2/alevt/Makefile.am	2004-08-22 13:39:16.349496110 +0200
+@@ -83,7 +83,7 @@
  # AM_CFLAGS=$(OPT) -DVERSION=\"$(VER)\" $(DEFS) -I/usr/X11R6/include -I/usr/local/include -W
  
  #AM_CFLAGS = -DVERSION=\"$(VER)\"  @CFLAGS@  @X_CFLAGS@
--AM_CFLAGS = $(OPT)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
-+AM_CFLAGS = $(CFLAGS)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
+-AM_CFLAGS = @CFLAGPTHREAD@ $(OPT)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
++AM_CFLAGS = @CFLAGPTHREAD@ -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
  #INCLUDES = -I/usr/local/include
  
- libalevt_a_DEPENDENCIES = bdf2xbm font1.xbm font2.xbm fontsize.h
-diff -ur xawdecode/configure.in xawdecode.opt/configure.in
---- xawdecode/configure.in	Tue Feb 18 16:14:20 2003
-+++ xawdecode.opt/configure.in	Sat Feb 22 03:38:42 2003
-@@ -449,8 +449,6 @@
+ libalevt_a_DEPENDENCIES = bdf2xbm font1.xbm font2.xbm font3.xbm font4.xbm fontsize.h
+--- xawdecode-1.9.2/configure.in.orig	2004-06-19 23:07:37.000000000 +0200
++++ xawdecode-1.9.2/configure.in	2004-08-22 13:34:46.046828131 +0200
+@@ -911,8 +911,6 @@
      AC_MSG_RESULT($xvid_header_ok)
      if test x"$xvid_header_ok" = xno; then
          AC_MSG_WARN(*** Could not find XviD header files ***)
@@ -21,8 +19,8 @@ diff -ur xawdecode/configure.in xawdecode.opt/configure.in
 -        CFLAGS="$saved_CFLAGS"
      fi
  
- dnl ---------------------------------------------------------------------
-@@ -513,8 +511,6 @@
+ 
+@@ -987,8 +985,6 @@
      AC_MSG_RESULT($libavcodec_header_ok)
      if test x"$libavcodec_header_ok" = xno; then
          AC_MSG_WARN(*** Could not find libavcodec (ffmpeg) header files ***)
@@ -30,8 +28,8 @@ diff -ur xawdecode/configure.in xawdecode.opt/configure.in
 -        CFLAGS="$saved_CFLAGS"
      fi
  
- dnl ---------------------------------------------------------------------
-@@ -551,8 +547,6 @@
+ 
+@@ -1031,8 +1027,6 @@
      AC_MSG_RESULT($divx_header_ok)
      if test x"$divx_header_ok" = xno; then
          AC_MSG_WARN(*** Could not find divx4linux header files ***)
@@ -39,8 +37,8 @@ diff -ur xawdecode/configure.in xawdecode.opt/configure.in
 -        CFLAGS="$saved_CFLAGS"
      fi
  
- dnl ---------------------------------------------------------------------
-@@ -636,8 +630,6 @@
+ 
+@@ -1091,8 +1085,6 @@
          if test x"$lame_header_ok" = xno; then
              AC_MSG_WARN(*** Could not find lame header files ***)
              enable_lame=no
@@ -49,17 +47,14 @@ diff -ur xawdecode/configure.in xawdecode.opt/configure.in
          fi
      fi
  
-diff -ur xawdecode/src/Makefile.am xawdecode.opt/src/Makefile.am
---- xawdecode/src/Makefile.am	Sat Feb 22 03:37:59 2003
-+++ xawdecode.opt/src/Makefile.am	Sat Feb 22 03:33:30 2003
-@@ -54,8 +54,9 @@
+--- xawdecode-1.9.2/src/Makefile.am.orig	2004-08-22 13:34:46.043828867 +0200
++++ xawdecode-1.9.2/src/Makefile.am	2004-08-22 13:40:24.034899886 +0200
+@@ -81,7 +81,7 @@
+ 
  DISTCLEANFILES=*~ *.log
  
- PERF_FLAGS=-O4 @_march@ @_mcpu@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
-+PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
+-PERF_FLAGS=-O4 @_march@ @_mcpu@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
++PERF_FLAGS=-fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
  
--AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
-+AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(CFLAGS) $(PERF_FLAGS3) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
- 
- INCLUDES = -I../alevt
+ AM_CFLAGS = @CFLAGPTHREAD@ @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
  

@@ -4,7 +4,7 @@ Version:	1.6.8
 Release:	0.20030218.0
 License:	GPL
 URL:		http://xawdecode.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/xawdecode/%{name}-2003-02-18.tar.gz
+Source0:	http://dl.sourceforge.net/xawdecode/%{name}-2003-02-18.tar.gz
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch

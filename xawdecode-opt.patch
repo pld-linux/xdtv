@@ -52,18 +52,17 @@ diff -ur xawdecode/configure.in xawdecode.opt/configure.in
 diff -ur xawdecode/src/Makefile.am xawdecode.opt/src/Makefile.am
 --- xawdecode/src/Makefile.am	Sat Feb 22 03:37:59 2003
 +++ xawdecode.opt/src/Makefile.am	Sat Feb 22 03:33:30 2003
-@@ -54,9 +54,10 @@
+@@ -54,8 +54,9 @@
  DISTCLEANFILES=*~ *.log
- PERF_FLAGS1=-ffast-math -fomit-frame-pointer
- PERF_FLAGS2=-mcpu=i686 -O3 -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -DCPU=686 -ffast-math
+ 
+ PERF_FLAGS=-O4 @_march@ @_mcpu@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
 +PERF_FLAGS3=-fomit-frame-pointer -malign-double -fno-strict-aliasing -pipe @ALIGN_FLAGS@
-  
- #AM_CFLAGS = -Wall -D_REENTRANT $(PERF_FLAGS1) @CFLAGS@ @X_CFLAGS@ -DPREFIX='"$(prefix)"'
--AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS2) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+ 
+-AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
 +AM_CFLAGS = @DEBUG@ -Wall -D_REENTRANT $(CFLAGS) $(PERF_FLAGS3) @X_CFLAGS@ -DPREFIX='"$(prefix)"'
+ 
  INCLUDES = -I../alevt
  
- #xawdecode_LDADD = @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBDL@
 @@ -66,7 +67,7 @@
  
  # more agressive optimization options lead to a non working write_jpeg function

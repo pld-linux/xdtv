@@ -52,7 +52,10 @@ diff -ur xawdecode-1.6.6a/Makefile.am xawdecode-1.6.6a.DESTDIR/Makefile.am
 diff -ur xawdecode-1.6.6a/font/Makefile.in xawdecode-1.6.6a.DESTDIR/font/Makefile.in
 --- xawdecode-1.6.6a/font/Makefile.in	Mon Oct 28 20:18:25 2002
 +++ xawdecode-1.6.6a.DESTDIR/font/Makefile.in	Thu Jan 30 01:00:42 2003
-@@ -1,7 +1,6 @@
+@@ -1,10 +1,9 @@
+ # $Id$
+ ##############################################################################
+ 
 -ROOT=
  prefix=/usr/X11R6
  #FONTDIR=$(ROOT)$(prefix)/lib/X11/fonts/misc

@@ -1,31 +1,34 @@
 #
 # Conditional build:
-# --without lirc
+%bcond_without	lirc	# without LIRC support
 #
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
-Version:	1.8.2
-Release:	2
+Version:	1.9.2
+Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.gz
-# Source0-md5:	1d2e490314bc4e2db9bb21f1a94c497a
+Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.bz2
+# Source0-md5:	0d17f30e6600684aa297d22311789e87
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch
+Patch3:		%{name}-link.patch
 URL:		http://xawdecode.sourceforge.net/
+#BuildRequires:	Mowitz-devel	-- would make sense with neXtaw instead of Xaw3d
 BuildRequires:	XFree86-devel
 BuildRequires:	Xaw3d-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-#BuildRequires:	divx4linux-devel
 BuildRequires:	ffmpeg-devel
 BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
-%{!?_without_lirc:BuildRequires:	lirc-devel}
+%{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	xvid-devel
-ExclusiveArch:	%{ix86}
+BuildRequires:	zvbi-devel
+Requires(post,postun):	fontpostinst
+Requires:	%{_fontsdir}/misc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_appdefsdir	/usr/X11R6/lib/X11/app-defaults
@@ -41,7 +44,7 @@ wtyczek.
 Summary:	Development files for xawdecode
 Summary(pl):	Pliki do programowania z u¿yciem xawdecode
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description devel
 Development files for xawdecode.
@@ -54,18 +57,23 @@ Pliki do programowania z u¿yciem xawdecode.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
-LDFLAGS="%{rpmldflags} -lm"; export LDFLAGS
 %{__aclocal}
 %{__autoheader}
 %{__automake}
 %{__autoconf}
 %configure \
-	%{?_without_lirc:--disable-lirc} \
-	%{!?_without_lirc:--enable-lirc} \
+	--disable-alsa \
+	--disable-cpu-detection \
 	--disable-divx4linux \
-	--disable-alsa
+	%{!?with_lirc:--disable-lirc} \
+	%{?with_lirc:--enable-lirc} \
+	--disable-mowitz \
+	--disable-nextaw \
+	--disable-xaw95 \
+	--disable-xawm
 %{__make}
 
 %install
@@ -80,21 +88,17 @@ install -d $RPM_BUILD_ROOT/etc
 rm -rf $RPM_BUILD_ROOT
 
 %post
-cd %{_fontsdir}/misc
-umask 022
-/usr/X11R6/bin/mkfontdir
+fontpostinst misc
 
 %postun
-cd %{_fontsdir}/misc
-umask 022
-/usr/X11R6/bin/mkfontdir
+fontpostinst misc
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog FAQfr-xawdecode libavc-rate-control.txt
 %doc lircrc.hauppauge.sample lircrc.miro.sample lisez-moi README*
 %doc xawdecoderc.sample
-%attr(644,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/xawdecode*
+%config(noreplace) %verify(not md5 size mtime) /etc/xawdecode*
 %attr(755,root,root) %{_bindir}/xawdecode
 %attr(755,root,root) %{_bindir}/xawdecode_[a-uw]*
 %attr(4755,root,root) %{_bindir}/xawdecode_v4l-conf
@@ -106,4 +110,4 @@ umask 022
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*
+%{_includedir}/xawdecode

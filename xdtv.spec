@@ -11,6 +11,7 @@ License:	GPL
 Group:		X11/Applications/Multimedia
 Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.bz2
 # Source0-md5:	8dcb3a814c8db47009ddbe03787eeb1c
+Source1:	xawdecode.desktop
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch
@@ -78,11 +79,13 @@ Pliki do programowania z u¿yciem xawdecode.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_desktopdir}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	FONTDIR=%{_fontsdir}/misc
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -98,7 +101,7 @@ fontpostinst misc
 %doc AUTHORS ChangeLog FAQfr-xdtv libavc-rate-control.txt
 %doc lircrc.hauppauge.sample lircrc.miro.sample lisez-moi README*
 %doc xdtvrc.sample
-%config(noreplace) %verify(not md5 size mtime) /etc/xdtv*
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/xdtv*
 %attr(755,root,root) %{_bindir}/xdtv
 %attr(755,root,root) %{_bindir}/xdtv_[a-uw]*
 %attr(4755,root,root) %{_bindir}/xdtv_v4l-conf
@@ -107,6 +110,7 @@ fontpostinst misc
 %{_appdefsdir}/*
 %{_mandir}/man1/*
 %{_fontsdir}/misc/*.pcf
+%{_desktopdir}/%{name}.desktop
 
 %files devel
 %defattr(644,root,root,755)

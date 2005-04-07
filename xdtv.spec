@@ -28,11 +28,11 @@ BuildRequires:	lame-libs-devel >= 3.96.1
 BuildRequires:	libjpeg-devel
 BuildRequires:	libtool
 %{?with_lirc:BuildRequires:	lirc-devel}
-BuildRequires:	xvid-devel >= 1.1.0
+BuildRequires:	xvid-devel >= 1:1.1.0
 BuildRequires:	zvbi-devel >= 0.2.14
 Requires(post,postun):	fontpostinst
 Requires:	%{_fontsdir}/misc
-Requires:	xvid >= 1.1.0
+Requires:	xvid >= 1:1.1.0
 Requires:	zvbi >= 0.2.14
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 

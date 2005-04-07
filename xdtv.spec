@@ -5,12 +5,12 @@
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
-Version:	2.0.1
-Release:	2
+Version:	2.1.1
+Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.bz2
-# Source0-md5:	8dcb3a814c8db47009ddbe03787eeb1c
+Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
+# Source0-md5:	a8d69d94f20392870d1559fb3f747cc5
 Source1:	xawdecode.desktop
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
@@ -20,16 +20,20 @@ URL:		http://xawdecode.sourceforge.net/
 #BuildRequires:	Mowitz-devel	-- would make sense with neXtaw instead of Xaw3d
 BuildRequires:	XFree86-devel
 BuildRequires:	Xaw3d-devel
+BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	ffmpeg-devel
-BuildRequires:	lame-libs-devel
+BuildRequires:	ffmpeg-devel >= 0.4.9
+BuildRequires:	lame-libs-devel >= 3.96.1
 BuildRequires:	libjpeg-devel
+BuildRequires:	libtool
 %{?with_lirc:BuildRequires:	lirc-devel}
-BuildRequires:	xvid-devel
-BuildRequires:	zvbi-devel
+BuildRequires:	xvid-devel >= 1.1.0
+BuildRequires:	zvbi-devel >= 0.2.14
 Requires(post,postun):	fontpostinst
 Requires:	%{_fontsdir}/misc
+Requires:	xvid >= 1.1.0
+Requires:	zvbi >= 0.2.14
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_appdefsdir	/usr/X11R6/lib/X11/app-defaults
@@ -66,7 +70,6 @@ Pliki do programowania z u¿yciem xawdecode.
 %{__automake}
 %{__autoconf}
 %configure \
-	--disable-alsa \
 	--disable-cpu-detection \
 	--disable-divx4linux \
 	%{!?with_lirc:--disable-lirc} \

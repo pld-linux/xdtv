@@ -11,7 +11,7 @@ License:	GPL
 Group:		X11/Applications/Multimedia
 Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
 # Source0-md5:	5f8069ae7a64e0907c59de26290d9fe7
-Source1:	xawdecode.desktop
+Source1:	%{name}.desktop
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-opt.patch
 Patch2:		%{name}-xvid.patch
@@ -104,7 +104,7 @@ fontpostinst misc
 %doc AUTHORS ChangeLog FAQfr-xdtv
 %doc lircrc.hauppauge.sample lircrc.miro.sample lisez-moi README*
 %doc xdtvrc.sample
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/xdtv*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/xdtv*
 %attr(755,root,root) %{_bindir}/xdtv
 %attr(755,root,root) %{_bindir}/xdtv_[a-uw]*
 %attr(4755,root,root) %{_bindir}/xdtv_v4l-conf

@@ -1,20 +1,21 @@
---- xawdecode-1.9.2/font/Makefile.in.orig	2003-12-08 21:11:20.000000000 +0100
-+++ xawdecode-1.9.2/font/Makefile.in	2004-08-22 13:33:43.025306560 +0200
-@@ -1,7 +1,6 @@
+diff -Nur old/font/Makefile.in new/font/Makefile.in
+--- old/font/Makefile.in	2005-11-01 10:57:04.000000000 +0000
++++ new/font/Makefile.in	2006-02-01 22:04:05.000000000 +0000
+@@ -1,6 +1,5 @@
 -ROOT=
  prefix=/usr/X11R6
- #FONTDIR=$(ROOT)$(prefix)/lib/X11/fonts/misc
 -FONTDIR=$(ROOT)/@x_libraries@/X11/fonts/misc
 +FONTDIR=/usr/share/fonts/misc
  BDF=$(shell echo *.bdf)
  PCF=$(subst .bdf,.pcf,$(BDF))
  
-@@ -9,15 +8,10 @@
+@@ -8,15 +7,11 @@
  	$(MKFONTDIR)
  
  install: all
 -	mkdir -p $(R)$(DESTDIR)$(FONTDIR)
 +	mkdir -p $(DESTDIR)$(FONTDIR)
++
  	for file in $(PCF); do \
 -		install -m 644 $$file $(R)$(DESTDIR)$(FONTDIR); \
 +		install -m 644 $$file $(DESTDIR)$(FONTDIR); \
@@ -27,10 +28,11 @@
  
  uninstall:
  #	for file in $(PCF); do \
---- xawdecode-1.9.2/src/Makefile.am.orig	2004-06-18 20:12:33.000000000 +0200
-+++ xawdecode-1.9.2/src/Makefile.am	2004-08-22 13:34:00.074118781 +0200
-@@ -97,9 +97,6 @@
- xdtv_wizard_SOURCES = xdtv_wizard.c
+diff -Nur old/src/Makefile.am new/src/Makefile.am
+--- old/src/Makefile.am	2006-01-08 22:35:24.000000000 +0000
++++ new/src/Makefile.am	2006-02-01 22:04:34.000000000 +0000
+@@ -147,9 +147,6 @@
+ xdtv_wizard_SOURCES = xdtv_wizard.c translation.c 
  xdtv_wizard_LDADD = @X_LIBS@ @LIBXAW@ @LIBXMU@ @LIBXT@ @LIBXPM@ @LIBXEXT@ -lX11
  
 -install-exec-local:
@@ -38,4 +40,4 @@
 -
  xdtv_scantv_LDADD = @LIBZVBI@ @LIBM@ @LIBPTHREAD@
  
- xdtv_scantv_SOURCES = xdtv_scantv.c grab-v4l.c grab-v4l2.c strtab.c colorspace.c frequencies.c
+ xdtv_scantv_SOURCES = xdtv_scantv.c grab-v4l.c grab-v4l2.c strtab.c colorspace.c frequencies.c translation.c

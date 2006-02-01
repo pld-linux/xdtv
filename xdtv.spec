@@ -5,17 +5,17 @@
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
 Name:		xawdecode
-Version:	2.2.0
-Release:	2
+Version:	2.3.0
+Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
-# Source0-md5:	5f8069ae7a64e0907c59de26290d9fe7
+#Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
+Source0:	http://heanet.dl.sourceforge.net/sourceforge/xawdecode/xdtv-%{version}.tar.gz
+# Source0-md5:	8631dd2a3a6e71de4c591b52eee31a89
 Source1:	%{name}.desktop
 Patch0:		%{name}-DESTDIR.patch
-Patch1:		%{name}-opt.patch
-Patch2:		%{name}-xvid.patch
-Patch3:		%{name}-link.patch
+Patch1:		%{name}-xvid.patch
+Patch2:		%{name}-link.patch
 URL:		http://xawdecode.sourceforge.net/
 #BuildRequires:	Mowitz-devel	-- would make sense with neXtaw instead of Xaw3d
 BuildRequires:	XFree86-devel
@@ -62,7 +62,6 @@ Pliki do programowania z u¿yciem xawdecode.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__aclocal}

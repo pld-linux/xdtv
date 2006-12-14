@@ -1,0 +1,499 @@
+diff -ur xdtv-2.3.2.orig/Makefile.am xdtv-2.3.2/Makefile.am
+--- xdtv-2.3.2.orig/Makefile.am	2006-03-10 22:58:51.000000000 +0100
++++ xdtv-2.3.2/Makefile.am	2006-06-17 10:57:40.000000000 +0200
+@@ -2,7 +2,7 @@
+ # $Id$
+ ##############################################################################
+ 
+-SUBDIRS = @FFMPEGFOLDER@ alevt src font man
++SUBDIRS = alevt src font man
+ 
+ CLEANFILES = debian/*~ debian/xdtv.files slackware/*~ gentoo/*~ patch/*~ XdTV.ad xdtv_scan.sh xdtv_record.sh *~ .*~ *.spec *.log \#* .\#*
+ 
+diff -ur xdtv-2.3.2.orig/configure.in xdtv-2.3.2/configure.in
+--- xdtv-2.3.2.orig/configure.in	2006-03-14 21:57:41.000000000 +0100
++++ xdtv-2.3.2/configure.in	2006-06-17 10:43:52.000000000 +0200
+@@ -293,15 +293,6 @@
+ AC_MSG_CHECKING(CPU type)
+ AC_MSG_RESULT($pname)
+ 
+-AC_MSG_CHECKING(Check for sse)
+-AC_MSG_RESULT($_sse)
+-
+-AC_MSG_CHECKING(Check for 3DNow!)
+-AC_MSG_RESULT($_3dnow)
+-
+-AC_MSG_CHECKING(Check for Extended 3DNow!)
+-AC_MSG_RESULT($_3dnowex)
+-
+ else
+   AC_MSG_WARN(No support for /proc/cpuinfo !!!)
+ fi
+@@ -1039,6 +1030,186 @@
+ fi
+ 
+ 
++if test "$enable_ffmpeg" != "no"; then
++dnl ---------------------------------------------------------------------
++dnl Checks for libavcodec (ffmpeg) headers
++
++    AC_MSG_CHECKING(for libavcodec (ffmpeg) header files)
++    AC_TRY_COMPILE([
++    #include <ffmpeg/avcodec.h>
++    ],
++    [
++    AVCodec *codec;
++    AVCodecContext codec_context;
++    ], libavcodec_header_ok=yes, libavcodec_header_ok=no)
++
++    AC_MSG_RESULT($libavcodec_header_ok)
++    if test x"$libavcodec_header_ok" = xno; then
++        AC_MSG_WARN(*** Could not find libavcodec (ffmpeg) header files ***)
++    fi
++
++dnl ---------------------------------------------------------------------
++dnl Checks for libffmpeg libraries (avcodec)
++
++  if test x"$libavcodec_header_ok" != xno; then
++    AC_CHECK_LIB(avcodec, avcodec_init,
++                AC_DEFINE(HAVE_FFMPEG,1, ffmpeg librairies) LIBAVCODEC="-lavcodec",
++                LIBAVCODEC="", -lm)
++    AC_SUBST(LIBAVCODEC)
++
++    if test "$LIBAVCODEC" = ""; then
++        AC_MSG_WARN(*** Could not find libavcodec (ffmpeg) libraries: feature is disabled)
++    fi
++  fi
++
++dnl ---------------------------------------------------------------------
++dnl Checks for libavformat (ffmpeg) headers
++
++    AC_MSG_CHECKING(for libavformat (ffmpeg) header files)
++    AC_TRY_COMPILE([
++    #include <ffmpeg/avformat.h>
++    #if LIBAVFORMAT_BUILD <= 4608
++    #error "libavformat too old"
++    #endif
++    ],, libavformat_header_ok=yes, libavformat_header_ok=no)
++    AC_MSG_RESULT($libavformat_header_ok)
++    if test "x$libavformat_header_ok" = "xno"; then
++        AC_MSG_WARN(*** Could not find libavformat (ffmpeg) header files ***)
++        enable_dvb=no
++    fi
++
++dnl ---------------------------------------------------------------------
++dnl Checks for libffmpeg libraries (avformat)
++
++  if test x"$libavformat_header_ok" != xno; then
++    AC_CHECK_LIB(avformat -lavcodec, av_open_input_stream,
++                LIBAVFORMAT="-lavformat",
++                LIBAVFORMAT="",)
++    AC_SUBST(LIBAVFORMAT)
++
++    if test "$LIBAVFORMAT" = ""; then
++        AC_MSG_WARN(*** Could not find libavformat (ffmpeg) libraries: feature is disabled)
++        enable_dvb=no
++    fi
++  fi
++
++dnl ------------- tests which need libavcodec ---------------------
++if test "$LIBAVCODEC" != ""; then
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the x264 support
++
++  AC_MSG_CHECKING(for ffmpeg x264 support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&x264_encoder)],
++              ffmpeg_x264=yes,ffmpeg_x264=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_x264" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_X264, 1, ffmpeg is build with the x264 support)
++    AC_SUBST(HAVE_FFMPEG_X264)
++  fi
++  AC_MSG_RESULT($ffmpeg_x264)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the XviD support
++
++  AC_MSG_CHECKING(for ffmpeg xvid support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&xvid_encoder)],
++              ffmpeg_xvid=yes,ffmpeg_xvid=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_xvid" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_XVID, 1, ffmpeg is build with the xvid support)
++    AC_SUBST(HAVE_FFMPEG_XVID)
++  fi
++  AC_MSG_RESULT($ffmpeg_xvid)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the MP3 Lame support
++
++  AC_MSG_CHECKING(for ffmpeg mp3lame support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&mp3lame_encoder)],
++              ffmpeg_mp3=yes,ffmpeg_mp3=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_mp3" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_MP3, 1, ffmpeg is build with the mp3lame support)
++    AC_SUBST(HAVE_FFMPEG_MP3)
++  fi
++  AC_MSG_RESULT($ffmpeg_mp3)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the AAC support
++
++  AC_MSG_CHECKING(for ffmpeg aac support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&faac_encoder)],
++              ffmpeg_aac=yes,ffmpeg_aac=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_aac" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_AAC, 1, ffmpeg is build with the aac support)
++    AC_SUBST(HAVE_FFMPEG_AAC)
++  fi
++  AC_MSG_RESULT($ffmpeg_aac)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the AC3 support
++
++  AC_MSG_CHECKING(for ffmpeg ac3 support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&ac3_encoder)],
++              ffmpeg_ac3=yes,ffmpeg_ac3=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_ac3" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_AC3, 1, ffmpeg is build with the ac3 support)
++    AC_SUBST(HAVE_FFMPEG_AC3)
++  fi
++  AC_MSG_RESULT($ffmpeg_ac3)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the AMR NB support
++
++  AC_MSG_CHECKING(for ffmpeg amr_nb support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&amr_nb_encoder)],
++              ffmpeg_amr_nb=yes,ffmpeg_amr_nb=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_amr_nb" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_AMR_NB, 1, ffmpeg is build with the amr_nb support)
++    AC_SUBST(HAVE_FFMPEG_AMR_NB)
++  fi
++  AC_MSG_RESULT($ffmpeg_amr_nb)
++
++dnl ---------------------------------------------------------------------
++dnl Check if ffmpeg is build with the AMR WB support
++
++  AC_MSG_CHECKING(for ffmpeg amr_wb support)
++  saved_LIBS="$LIBS"
++  LIBS="$saved_LIBS $LIBAVCODEC"
++  AC_TRY_LINK([#include <ffmpeg/avformat.h>],[register_avcodec(&amr_wb_encoder)],
++              ffmpeg_amr_wb=yes,ffmpeg_amr_wb=no)
++  LIBS="$saved_LIBS"
++  if test x"$ffmpeg_amr_wb" != x"no"; then
++    AC_DEFINE(HAVE_FFMPEG_AMR_WB, 1, ffmpeg is build with the amr_wb support)
++    AC_SUBST(HAVE_FFMPEG_AMR_WB)
++  fi
++  AC_MSG_RESULT($ffmpeg_amr_wb)
++
++dnl ------------- end tests which need libavcodec ---------------------
++fi
++
++dnl -------- end ffmpeg checks ------------------------------------------
++else
++    AC_MSG_WARN(*** FFmpeg support disabled)
++fi
++
++
+ dnl ---------------------------------------------------------------------
+ dnl Checks for ogg / vorbis / theora headers
+ 
+@@ -1328,16 +1499,60 @@
+ dnl Checks for DVB support
+ 
+ if test "$enable_dvb" != "no" -a "$enable_ffmpeg" != "no"; then
+-   AC_MSG_CHECKING(for DVB support)
++   AC_MSG_CHECKING(for DVB driver support)
+    dnl CFLAGS="$CFLAGS -I/lib/modules/`uname -r`/build/include"
+    dnl ^^ NO NO!! the kernel headers used to compile MUST be the same than
+    dnl the ones which have been used to compile the current glibc !!!
+    dnl see http://lkml.org/lkml/2000/7/27/10
+    AC_TRY_COMPILE([
+-#include <linux/dvb/frontend.h>
+-],,dvb_ok=yes,dvb_ok=no)
+-   AC_MSG_RESULT($dvb_ok)
+-   if test "$dvb_ok" = "yes"; then
++	#include <linux/dvb/frontend.h>
++   ],,dvb_drivers_ok=yes,dvb_drivers_ok=no)
++   AC_MSG_RESULT($dvb_drivers_ok)
++
++   dnl check for LIBSDL headers
++   AC_MSG_CHECKING(for libsdl header files)
++   AC_TRY_COMPILE([
++	#include <SDL/SDL.h>
++	#include <SDL/SDL_thread.h>
++    ],
++    [
++    SDL_mutex *mutex;
++    SDL_cond *cond;
++    ], libsdl_header_ok=yes, libsdl_header_ok=no)
++    AC_MSG_RESULT($libsdl_header_ok)
++
++    if test "$libsdl_header_ok" != "no"; then
++    AC_CHECK_LIB(SDL, SDL_Init,
++         AC_DEFINE(HAVE_SDL,1,"have libSDL") LIBSDL="-lSDL",,)
++    AC_SUBST(LIBSDL)
++
++      if test "$LIBSDL" = ""; then
++        AC_MSG_WARN(*** Could not find libSDL libraries: feature is disabled)
++      fi
++    fi
++
++   dnl check for LIBCURL headers
++   AC_MSG_CHECKING(for libcurl header files)
++   AC_TRY_COMPILE([
++	#include <curl/curl.h>
++    ],
++    [
++     CURL *curl;
++     CURLcode res;
++    ], libcurl_header_ok=yes, libcurl_header_ok=no)
++    AC_MSG_RESULT($libcurl_header_ok)
++
++    if test "$libcurl_header_ok" != "no"; then
++    AC_CHECK_LIB(curl, curl_easy_init,
++         AC_DEFINE(HAVE_CURL,1,"have libcurl") LIBCURL="-lcurl",,)
++    AC_SUBST(LIBCURL)
++
++      if test "$LIBCURL" = ""; then
++        AC_MSG_WARN(*** Could not find libcurl libraries: feature is disabled)
++      fi
++    fi
++
++   if test "$dvb_drivers_ok" = "yes"  -a "$LIBSDL" != "" -a "$LIBCURL" != "" ; then
+         AC_DEFINE(HAVE_DVB,1,"have dvb")
+    fi
+ else
+@@ -1368,199 +1583,6 @@
+ fi
+ AC_SUBST(FONT)
+ 
+-if test "$enable_ffmpeg" != "no"; then
+-dnl ----------------------------------------------------------------------------------
+-dnl FFMPEG inside.....with or without AMR_NB/AMR_WB: that depends of your choice
+-
+-    cp -f configure.make config.mak.in
+-
+-    dnl ---------xdtv flag--------------------------------------------
+-    AC_DEFINE(HAVE_FFMPEG,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_FFMPEG_AC3,1,FFMPEG is inside XdTV now!)
+-    FFMPEGFOLDER="libavutil libavcodec libavformat"
+-    FFMPEGLINK="../libavformat/libavformat.a ../libavutil/libavutil.a ../libavcodec/libavcodec.a"
+-    FFMPEGINC="-I../libavutil -I../libavformat -I../libavcodec"
+-    AC_SUBST(FFMPEGLINK)
+-    AC_SUBST(FFMPEGINC)
+-    AC_SUBST(FFMPEGFOLDER)
+-
+-    dnl ---------ffmpeg flag-------------------------------------------
+-    AC_DEFINE(CONFIG_AC3_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(TUNECPU,generic,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_LOCALTIME_R,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_LRINTF,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_VHOOK,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_ENCODERS,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_DECODERS,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MUXERS,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_DEMUXERS,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_PP,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_HAVE_DLFCN,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_MALLOC_H,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(HAVE_MEMALIGN,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(SIMPLE_IDCT,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_GPL,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(restrict,__restrict__,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MP2_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MPEG1VIDEO_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MPEG2VIDEO_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_H261_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_H263_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_H263P_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_FLV_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_RV10_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_RV20_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MPEG4_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MSMPEG4V2_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MSMPEG4V3_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_WMV1_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_WMV2_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MJPEG_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_LJPEG_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_HUFFYUV_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_FFVHUFF_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_ASV1_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_ASV2_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_FFV1_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_SNOW_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_DVVIDEO_ENCODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MPEG2VIDEO_DECODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MPEGVIDEO_DECODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_MP2_DECODER,1,FFMPEG is inside XdTV now!)
+-    AC_DEFINE(CONFIG_PROTOCOLS,1,FFMPEG is inside XdTV now!)
+-
+-    if test x"$enable_ffmpeg_amrnb" == xyes; then
+-
+-      dnl ---------xdtv flag-------
+-      AC_DEFINE(HAVE_FFMPEG_AMR_NB,1,FFMPEG AMR_NB is inside XdTV now!)
+-
+-      dnl ---------ffmpeg flags-------
+-      AC_DEFINE(AMR_NB,1,AMR_NB is inside XdTV now!)
+-      AC_DEFINE(AMR_NB_FIXED,1,AMR_NB_FIXED is inside XdTV now!)
+-      AC_DEFINE(CONFIG_AMR_NB_ENCODER,1,AMR_NB ENCODER is inside XdTV now!)
+-      echo "AMR_NB=yes" >> config.mak.in
+-      echo "AMR_NB_FIXED=yes" >> config.mak.in
+-      echo "CONFIG_AMR_NB_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG AMR_NB: $enable_ffmpeg_amrnb)
+-    fi
+-
+-    if test x"$enable_ffmpeg_amrwb" == xyes; then
+-
+-      dnl ---------xdtv flag-------
+-      AC_DEFINE(HAVE_FFMPEG_AMR_WB,1,FFMPEG AMR_WB is inside XdTV now!)
+-
+-      dnl ---------ffmpeg flags-------
+-      AC_DEFINE(AMR_WB,1,AMR_NB is inside XdTV now!)
+-      AC_DEFINE(CONFIG_AMR_WB_ENCODER,1,AMR_WB_ENCODER is inside XdTV now!)
+-      echo "AMR_WB=yes" >> config.mak.in
+-      echo "CONFIG_AMR_WB_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG AMR_WB: $enable_ffmpeg_amrwb)
+-    fi
+-
+-    if test "$LIBLAME" != ""; then
+-
+-      dnl ---------xdtv flags--------------
+-      AC_DEFINE(HAVE_FFMPEG_MP3,1,FFMPEG lame library)
+-
+-      dnl ---------ffmpeg flags--------------
+-      AC_DEFINE(CONFIG_MP3LAME_ENCODER,1,FFMPEG is inside XdTV now!)
+-      AC_DEFINE(CONFIG_MP3LAME,1,FFMPEG is inside XdTV now!)
+-      echo "CONFIG_MP3LAME=yes" >> config.mak.in
+-      echo "CONFIG_MP3LAME_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG LAME: yes)
+-    fi
+-
+-    if test "$LIBXVID" != ""; then
+-
+-      dnl ---------xdtv flags--------------
+-      AC_DEFINE(HAVE_FFMPEG_XVID,1, FFMPEG XviD librairies)
+-
+-      dnl ---------ffmpeg flags--------------
+-      AC_DEFINE(CONFIG_XVID_ENCODER,1,FFMPEG is inside XdTV now!)
+-      AC_DEFINE(CONFIG_XVID,1,FFMPEG is inside XdTV now!)
+-      echo "CONFIG_XVID=yes" >> config.mak.in
+-      echo "CONFIG_XVID_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG XVID: yes)
+-    fi
+-
+-      if test "$LIBFAAC" != ""; then
+-
+-      dnl ---------xdtv flags--------------
+-      AC_DEFINE(HAVE_FFMPEG_AAC,1, FFMPEG AAC librairies)
+-
+-      dnl ---------ffmpeg flags--------------
+-      AC_DEFINE(CONFIG_FAAC_ENCODER,1,FFMPEG AAC is inside XdTV now!)
+-      AC_DEFINE(CONFIG_FAAC,1,FFMPEG AAC is inside XdTV now!)
+-      echo "CONFIG_FAAC=yes" >> config.mak.in
+-      echo "CONFIG_FAAC_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG FAAC: yes)
+-    fi
+-
+-    if test "$LIBX264" != ""; then
+-
+-      dnl ---------xdtv flags--------------
+-      AC_DEFINE(HAVE_FFMPEG_X264,1, FFMPEG X264 librairies)
+-
+-      dnl ---------ffmpeg flags--------------
+-      AC_DEFINE(CONFIG_X264_ENCODER,1,FFMPEG X264 is inside XdTV now!)
+-      AC_DEFINE(CONFIG_X264,1,FFMPEG X264 is inside XdTV now!)
+-      echo "CONFIG_X264=yes" >> config.mak.in
+-      echo "CONFIG_X264_ENCODER=yes" >> config.mak.in
+-
+-      AC_MSG_RESULT(*** FFMPEG X264: yes)
+-    fi
+-
+-    dnl ---------ffmpeg optimization--------------
+-    if test x"$have_mmx" == xyes; then
+-      echo "TARGET_MMX=yes" >> config.mak.in
+-      AC_DEFINE(__CPU__,586,FFMPEG is inside XdTV now!)
+-      AC_MSG_RESULT(*** FFMPEG with MMX: yes)
+-    fi
+-
+-    if test x"$_sse" == xyes; then
+-      AC_DEFINE(HAVE_BUILTIN_VECTOR,1,FFMPEG is inside XdTV now!)
+-      echo "TARGET_BUILTIN_VECTOR=yes" >> config.mak.in
+-      AC_MSG_RESULT(*** FFMPEG with SSE: yes)
+-    fi
+-
+-    AC_TRY_COMPILE([#include <mm3dnow.h>],,mm3dnow=yes,mm3dnow=no)
+-    if test x"$mm3dnow" == xyes -a x"$_3dnow" == xyes -a x"$_3dnowex" == xyes; then
+-      echo "TARGET_BUILTIN_3DNOW=yes" >> config.mak.in
+-      AC_DEFINE(HAVE_MM3DNOW,1,FFMPEG is inside XdTV now!)
+-      AC_MSG_RESULT(*** FFMPEG with 3Dnow!: yes)
+-    fi
+-
+-    dnl ---------ffmpeg arch--------------
+-    if test x"$host_arch" == xi386; then
+-      AC_DEFINE(ARCH_X86,1,FFMPEG is inside XdTV now!)
+-      echo "TARGET_ARCH_X86=yes" >> config.mak.in
+-    fi
+-
+-    if test x"$host_arch" == xx86_64; then
+-      AC_DEFINE(ARCH_X86_64,1,FFMPEG is inside XdTV now!)
+-      echo "TARGET_ARCH_X86_64=yes" >> config.mak.in
+-    fi
+-
+-    if test x"$host_arch" == xalpha; then
+-      AC_DEFINE(ARCH_ALPHA,1,FFMPEG is inside XdTV now!)
+-      echo "TARGET_ARCH_ALPHA=yes" >> config.mak.in
+-    fi
+-
+-    if test x"$host_arch" == xsparc; then
+-      AC_DEFINE(ARCH_SPARC,1,FFMPEG is inside XdTV now!)
+-      echo "TARGET_ARCH_SPARC=yes" >> config.mak.in
+-    fi
+-
+-else
+-    AC_MSG_WARN(*** FFmpeg support disabled)
+-fi
+-
+-
+ dnl ---------------------------------------------------------------------
+ dnl Writing results
+ 
+diff -ur xdtv-2.3.2.orig/src/Makefile.am xdtv-2.3.2/src/Makefile.am
+--- xdtv-2.3.2.orig/src/Makefile.am	2006-03-12 17:55:37.000000000 +0100
++++ xdtv-2.3.2/src/Makefile.am	2006-06-17 11:03:45.000000000 +0200
+@@ -137,9 +137,9 @@
+ 
+ AM_CFLAGS = @CFLAGPTHREAD@ @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
+ 
+-INCLUDES = -I../alevt @FFMPEGINC@
++INCLUDES = -I../alevt -I/usr/include/ffmpeg
+ 
+-xdtv_LDADD = ../alevt/libalevt.a @FFMPEGLINK@ @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBM@ @LIBASOUND@ @LIBPTHREAD@ @LIBDL@ @LIBDIVX@ @LIBLAME@ @LIBOGGALL@ @LIBXVID@ @LIBNET@ @LIBSEM@ @LIBOSS@ @XINERAMA_LIBS@ @LIBPNG@ @LIBFAAC@ @LIBX264@
++xdtv_LDADD = ../alevt/libalevt.a $(libdir)/libavformat.la $(libdir)/libavutil.la $(libdir)/libavcodec.la @X_LIBS@ @LIBXAW@ @LIBXT@ @X_PRE_LIBS@ -lX11 @LIBXMU@ @LIBXEXT@ @LIBXXF86DGA@ @LIBXXF86VM@ @LIBXV@ @LIBXDPMS@ @LIBJPEG@ @LIBASOUND@ @LIBXPM@ @LIBLIRC@ @LIBM@ @LIBASOUND@ @LIBPTHREAD@ @LIBDL@ @LIBDIVX@ @LIBLAME@ @LIBOGGALL@ @LIBXVID@ @LIBNET@ @LIBSEM@ @LIBOSS@ @XINERAMA_LIBS@ @LIBPNG@ @LIBFAAC@ @LIBX264@
+ 
+ xdtv_LDFLAGS = -rdynamic
+ 

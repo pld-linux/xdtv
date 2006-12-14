@@ -1,0 +1,60 @@
+--- xawdecode-1.9.2/alevt/Makefile.am.orig	2004-03-31 00:05:15.000000000 +0200
++++ xawdecode-1.9.2/alevt/Makefile.am	2004-08-22 13:39:16.349496110 +0200
+@@ -83,7 +83,7 @@
+ # AM_CFLAGS=$(OPT) -DVERSION=\"$(VER)\" $(DEFS) -I/usr/X11R6/include -I/usr/local/include -W
+ 
+ #AM_CFLAGS = -DVERSION=\"$(VER)\"  @CFLAGS@  @X_CFLAGS@
+-AM_CFLAGS = @CFLAGPTHREAD@ $(OPT)  -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
++AM_CFLAGS = @CFLAGPTHREAD@ -D_REENTRANT -DVERSION=\"$(VER)\"  @X_CFLAGS@
+ #INCLUDES = -I/usr/local/include
+ 
+ libalevt_a_DEPENDENCIES = bdf2xbm font1.xbm font2.xbm font3.xbm font4.xbm fontsize.h
+--- xawdecode-1.9.2/configure.in.orig	2004-06-19 23:07:37.000000000 +0200
++++ xawdecode-1.9.2/configure.in	2004-08-22 13:34:46.046828131 +0200
+@@ -911,8 +911,6 @@
+     AC_MSG_RESULT($xvid_header_ok)
+     if test x"$xvid_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find XviD header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ 
+@@ -987,8 +985,6 @@
+     AC_MSG_RESULT($libavcodec_header_ok)
+     if test x"$libavcodec_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find libavcodec (ffmpeg) header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ 
+@@ -1031,8 +1027,6 @@
+     AC_MSG_RESULT($divx_header_ok)
+     if test x"$divx_header_ok" = xno; then
+         AC_MSG_WARN(*** Could not find divx4linux header files ***)
+-    else
+-        CFLAGS="$saved_CFLAGS"
+     fi
+ 
+ 
+@@ -1091,8 +1085,6 @@
+         if test x"$lame_header_ok" = xno; then
+             AC_MSG_WARN(*** Could not find lame header files ***)
+             enable_lame=no
+-        else
+-            CFLAGS="$saved_CFLAGS"
+         fi
+     fi
+ 
+--- xawdecode-1.9.2/src/Makefile.am.orig	2004-08-22 13:34:46.043828867 +0200
++++ xawdecode-1.9.2/src/Makefile.am	2004-08-22 13:40:24.034899886 +0200
+@@ -81,7 +81,7 @@
+ 
+ DISTCLEANFILES=*~ *.log
+ 
+-PERF_FLAGS=-O4 @_march@ -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
++PERF_FLAGS=-fno-strict-aliasing -pipe @ALIGN_FLAGS@ -ffast-math
+ 
+ AM_CFLAGS = @CFLAGPTHREAD@ @DEBUG@ -Wall -D_REENTRANT $(PERF_FLAGS) @X_CFLAGS@ @LIBXOSD_CFLAGS@ -DPREFIX='"$(prefix)"' -D_LARGEFILE64_SOURCE
+ 

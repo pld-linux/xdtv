@@ -4,19 +4,18 @@
 #
 Summary:	Video4Linux Stream Capture Viewer
 Summary(pl):	Program do ogl±dania strumienia z Video4Linux
-Name:		xawdecode
-Version:	2.3.2
-Release:	2
+Name:		xdtv
+Version:	2.3.3
+Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-#Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
-Source0:	http://dl.sourceforge.net/xawdecode/xdtv-%{version}.tar.gz
-# Source0-md5:	3e4b2b518b6ab209e5ebc82a6c413d2a
-Source1:	%{name}.desktop
-Patch0:		%{name}-xvid.patch
-Patch1:		%{name}-link.patch
-Patch2:		%{name}-ffmpeg.patch
-Patch3:		xdtv-ffmpeg.patch
+Source0:	http://dl.sourceforge.net/xawdecode/%{name}-%{version}.tar.gz
+# Source0-md5:	72528d2205ac5e22ae766283a993225c
+Source1:	xawdecode.desktop
+Patch0:		xawdecode-xvid.patch
+Patch1:		%{name}-ffmpeg.patch
+Patch2:		%{name}-parallel-install.patch
+Patch3:		%{name}-setXid.patch
 URL:		http://xawdecode.sourceforge.net/
 #BuildRequires:	Mowitz-devel	-- would make sense with neXtaw instead of Xaw3d
 BuildRequires:	XFree86-devel
@@ -35,6 +34,8 @@ Requires(post,postun):	fontpostinst
 Requires:	%{_fontsdir}/misc
 Requires:	xvid >= 1:1.1.0
 Requires:	zvbi >= 0.2.14
+Provides:	xawdecode
+Obsoletes:	xawdecode
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_appdefsdir	/usr/X11R6/lib/X11/app-defaults
@@ -51,6 +52,7 @@ Summary:	Development files for xawdecode
 Summary(pl):	Pliki do programowania z u¿yciem xawdecode
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	xawdecode-devel
 
 %description devel
 Development files for xawdecode.
@@ -59,11 +61,13 @@ Development files for xawdecode.
 Pliki do programowania z u¿yciem xawdecode.
 
 %prep
-%setup -q -n xdtv-%{version}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+
+rm -rf libavformat libavcodec libavutil libpostproc
 
 %build
 %{__aclocal}
@@ -76,6 +80,7 @@ Pliki do programowania z u¿yciem xawdecode.
 	%{!?with_lirc:--disable-lirc} \
 	%{?with_lirc:--enable-lirc} \
 	--disable-mowitz \
+	--enable-external-ffmpeg \
 	--disable-nextaw \
 	--disable-xaw95 \
 	--disable-xawm \
@@ -92,7 +97,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_desktopdir}}
 	DESTDIR=$RPM_BUILD_ROOT \
 	FONTDIR=%{_fontsdir}/misc
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}/%{name}.desktop
 
 %clean
 rm -rf $RPM_BUILD_ROOT

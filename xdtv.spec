@@ -16,6 +16,7 @@ Source1:	%{name}.desktop
 Patch0:		%{name}-xvid.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-ffmpeg.patch
+Patch3:		xdtv-ffmpeg.patch
 URL:		http://xawdecode.sourceforge.net/
 #BuildRequires:	Mowitz-devel	-- would make sense with neXtaw instead of Xaw3d
 BuildRequires:	XFree86-devel
@@ -62,6 +63,7 @@ Pliki do programowania z u¿yciem xawdecode.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__aclocal}

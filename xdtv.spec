@@ -3,7 +3,7 @@
 %bcond_without	lirc	# without LIRC support
 #
 Summary:	Video4Linux Stream Capture Viewer
-Summary(pl.UTF-8):   Program do oglądania strumienia z Video4Linux
+Summary(pl.UTF-8):	Program do oglądania strumienia z Video4Linux
 Name:		xdtv
 Version:	2.3.3
 Release:	1
@@ -49,7 +49,7 @@ wtyczek.
 
 %package devel
 Summary:	Development files for xawdecode
-Summary(pl.UTF-8):   Pliki do programowania z użyciem xawdecode
+Summary(pl.UTF-8):	Pliki do programowania z użyciem xawdecode
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	xawdecode-devel

@@ -12,6 +12,6 @@ Comment[sv]=TV-visare
 Exec=xdtv
 Icon=/usr/share/xdtv/icons/xdtv-48.png
 Type=Application
-Categories=Multimedia;AudioVideo;Video;TV;
+Categories=AudioVideo;Video;TV;
 Terminal=false
 # vi: encoding=utf-8
